@@ -1,0 +1,99 @@
+[gd_scene load_steps=23 format=3]
+
+[ext_resource type="PackedScene" path="res://character/Model/characterMedium.fbx" id="1_model"]
+[ext_resource type="Texture2D" path="res://character/phaix_skin.png" id="2_skin"]
+[ext_resource type="AnimationLibrary" path="res://character/Animations/idle.fbx" id="3_idle"]
+[ext_resource type="AnimationLibrary" path="res://character/Animations/run.fbx" id="4_run"]
+[ext_resource type="AnimationLibrary" path="res://character/Animations/jump.fbx" id="5_jump"]
+[ext_resource type="AnimationLibrary" path="res://steps/step_01_garden/made.tres" id="6_made"]
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_skin"]
+albedo_texture = ExtResource("2_skin")
+
+[sub_resource type="AnimationNodeAnimation" id="Animation_idle"]
+animation = &"idle/Root|Idle"
+
+[sub_resource type="AnimationNodeAnimation" id="Animation_walk"]
+animation = &"made/Walk"
+
+[sub_resource type="AnimationNodeAnimation" id="Animation_run"]
+animation = &"run/Root|Run"
+
+[sub_resource type="AnimationNodeAnimation" id="Animation_jump"]
+animation = &"jump/Root|Jump"
+
+[sub_resource type="AnimationNodeAnimation" id="Animation_fall"]
+animation = &"made/Fall"
+
+[sub_resource type="AnimationNodeBlendSpace1D" id="BlendSpace_move"]
+min_space = 0.0
+max_space = 5.0
+snap = 0.1
+value_label = "speed"
+sync_mode = 2
+blend_point_0/node = SubResource("Animation_idle")
+blend_point_0/pos = 0.0
+blend_point_1/node = SubResource("Animation_walk")
+blend_point_1/pos = 2.0
+blend_point_2/node = SubResource("Animation_run")
+blend_point_2/pos = 5.0
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_start"]
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_move_jump"]
+xfade_time = 0.15
+advance_mode = 2
+advance_expression = "not is_on_floor() and velocity.y > 0.0"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_move_fall"]
+xfade_time = 0.15
+advance_mode = 2
+advance_expression = "not is_on_floor() and velocity.y <= 0.0"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_jump_fall"]
+xfade_time = 0.15
+switch_mode = 2
+advance_mode = 2
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_jump_move"]
+xfade_time = 0.15
+advance_mode = 2
+advance_expression = "is_on_floor()"
+
+[sub_resource type="AnimationNodeStateMachineTransition" id="Transition_fall_move"]
+xfade_time = 0.15
+advance_mode = 2
+advance_expression = "is_on_floor()"
+
+[sub_resource type="AnimationNodeStateMachine" id="StateMachine_body"]
+states/Fall/node = SubResource("Animation_fall")
+states/Fall/position = Vector2(640, 240)
+states/Jump/node = SubResource("Animation_jump")
+states/Jump/position = Vector2(640, 40)
+states/Move/node = SubResource("BlendSpace_move")
+states/Move/position = Vector2(360, 100)
+states/Start/position = Vector2(120, 100)
+states/End/position = Vector2(860, 100)
+transitions = ["Start", "Move", SubResource("Transition_start"), "Move", "Jump", SubResource("Transition_move_jump"), "Move", "Fall", SubResource("Transition_move_fall"), "Jump", "Fall", SubResource("Transition_jump_fall"), "Jump", "Move", SubResource("Transition_jump_move"), "Fall", "Move", SubResource("Transition_fall_move")]
+
+[node name="Character" instance=ExtResource("1_model")]
+
+[node name="Root" parent="." index="0"]
+transform = Transform3D(48, 0, 0, 0, 0, 48, 0, -48, 0, 0, 0, 0)
+
+[node name="characterMedium" parent="Root/Skeleton3D" index="0"]
+layers = 4
+surface_material_override/0 = SubResource("StandardMaterial3D_skin")
+
+[node name="AnimationPlayer" type="AnimationPlayer" parent="." index="1"]
+libraries/idle = ExtResource("3_idle")
+libraries/run = ExtResource("4_run")
+libraries/jump = ExtResource("5_jump")
+libraries/made = ExtResource("6_made")
+autoplay = &"idle/Root|Idle"
+
+[node name="AnimationTree" type="AnimationTree" parent="." index="2"]
+tree_root = SubResource("StateMachine_body")
+advance_expression_base_node = NodePath("../..")
+anim_player = NodePath("../AnimationPlayer")

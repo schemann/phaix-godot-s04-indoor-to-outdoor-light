@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://steps/step_00_start/lamp.gd" id="1_lamp"]
+
+[ext_resource type="StandardMaterial3D" path="res://materials/fixture.tres" id="2_fixture"]
+
+[sub_resource type="BoxMesh" id="BoxMesh_fixture"]
+material = ExtResource("2_fixture")
+size = Vector3(0.6, 0.08, 0.6)
+
+[node name="Lamp" type="OmniLight3D"]
+light_color = Color(1, 0.94, 0.82, 1)
+light_energy = 1.5
+shadow_enabled = true
+omni_range = 9.0
+script = ExtResource("1_lamp")
+
+[node name="Fixture" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.36, 0)
+layers = 2
+mesh = SubResource("BoxMesh_fixture")

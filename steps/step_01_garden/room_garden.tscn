@@ -1,0 +1,187 @@
+[gd_scene load_steps=19 format=3]
+
+[ext_resource type="Script" path="res://steps/step_01_garden/room.gd" id="1_room"]
+
+[ext_resource type="StandardMaterial3D" path="res://materials/lawn.tres" id="2_lawn"]
+
+[ext_resource type="StandardMaterial3D" path="res://materials/wall.tres" id="3_wall"]
+
+[ext_resource type="StandardMaterial3D" path="res://materials/floor.tres" id="4_path"]
+
+[ext_resource type="StandardMaterial3D" path="res://materials/hedge.tres" id="5_hedge"]
+
+[ext_resource type="StandardMaterial3D" path="res://materials/bark.tres" id="6_bark"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_inside"]
+size = Vector3(10, 3, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_path"]
+material = ExtResource("4_path")
+size = Vector3(2, 0.01, 10)
+
+[sub_resource type="BoxMesh" id="BoxMesh_hedge"]
+material = ExtResource("5_hedge")
+size = Vector3(0.8, 1.2, 2.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_hedge"]
+size = Vector3(0.8, 1.2, 2.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_trunk"]
+material = ExtResource("6_bark")
+size = Vector3(0.4, 3.4, 0.4)
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_trunk"]
+size = Vector3(0.4, 3.4, 0.4)
+
+[sub_resource type="BoxMesh" id="BoxMesh_crown"]
+material = ExtResource("5_hedge")
+size = Vector3(2.4, 1.8, 2.4)
+
+[node name="Room" type="Node3D"]
+script = ExtResource("1_room")
+
+[node name="Shell" type="CSGCombiner3D" parent="."]
+use_collision = true
+
+[node name="Floor" type="CSGBox3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.1, 0)
+size = Vector3(10, 0.2, 10)
+material = ExtResource("2_lawn")
+
+[node name="WallEntrance" type="CSGBox3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 4.9)
+size = Vector3(10, 3, 0.2)
+material = ExtResource("3_wall")
+
+[node name="Opening" type="CSGBox3D" parent="Shell/WallEntrance"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+operation = 2
+size = Vector3(1.6, 2.4, 0.5)
+material = ExtResource("3_wall")
+
+[node name="WallFar" type="CSGBox3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, -4.9)
+size = Vector3(10, 3, 0.2)
+material = ExtResource("3_wall")
+
+[node name="Doorway" type="CSGBox3D" parent="Shell/WallFar"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.3, 0)
+operation = 2
+size = Vector3(1.6, 2.4, 0.5)
+material = ExtResource("3_wall")
+
+[node name="WallLeft" type="CSGBox3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.9, 1.5, 0)
+size = Vector3(0.2, 3, 10)
+material = ExtResource("3_wall")
+
+[node name="WallRight" type="CSGBox3D" parent="Shell"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 4.9, 1.5, 0)
+size = Vector3(0.2, 3, 10)
+material = ExtResource("3_wall")
+
+[node name="Path" type="MeshInstance3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.005, 0)
+gi_mode = 0
+mesh = SubResource("BoxMesh_path")
+
+[node name="HedgeLeftFront" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0.6, 3)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HedgeLeftFront"]
+mesh = SubResource("BoxMesh_hedge")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HedgeLeftFront"]
+shape = SubResource("BoxShape3D_hedge")
+
+[node name="HedgeLeftBack" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -2.4, 0.6, -3)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HedgeLeftBack"]
+mesh = SubResource("BoxMesh_hedge")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HedgeLeftBack"]
+shape = SubResource("BoxShape3D_hedge")
+
+[node name="HedgeRightFront" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.6, 3)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HedgeRightFront"]
+mesh = SubResource("BoxMesh_hedge")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HedgeRightFront"]
+shape = SubResource("BoxShape3D_hedge")
+
+[node name="HedgeRightBack" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2.4, 0.6, -3)
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="HedgeRightBack"]
+mesh = SubResource("BoxMesh_hedge")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="HedgeRightBack"]
+shape = SubResource("BoxShape3D_hedge")
+
+[node name="TreeLeft" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.8, 0, 1.2)
+
+[node name="Trunk" type="MeshInstance3D" parent="TreeLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+mesh = SubResource("BoxMesh_trunk")
+
+[node name="Crown" type="MeshInstance3D" parent="TreeLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.1, 0)
+mesh = SubResource("BoxMesh_crown")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreeLeft"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+shape = SubResource("BoxShape3D_trunk")
+
+[node name="TreeRight" type="StaticBody3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.8, 0, -1)
+
+[node name="Trunk" type="MeshInstance3D" parent="TreeRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+mesh = SubResource("BoxMesh_trunk")
+
+[node name="Crown" type="MeshInstance3D" parent="TreeRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 4.1, 0)
+mesh = SubResource("BoxMesh_crown")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="TreeRight"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.7, 0)
+shape = SubResource("BoxShape3D_trunk")
+
+[node name="Sun" type="DirectionalLight3D" parent="."]
+transform = Transform3D(0.86603, -0.39401, 0.30783, 0, 0.61566, 0.78801, -0.5, -0.68244, 0.53318, 0, 8, 0)
+light_volumetric_fog_energy = 0.0
+shadow_enabled = true
+directional_shadow_max_distance = 40.0
+
+[node name="LampSpots" type="Node3D" parent="."]
+
+[node name="Entrance" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 5)
+
+[node name="Exit" type="Marker3D" parent="."]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -5)
+
+[node name="Inside" type="Area3D" parent="."]
+collision_layer = 0
+collision_mask = 2
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Inside"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.5, 0)
+shape = SubResource("BoxShape3D_inside")
+
+[node name="KeySpots" type="Node3D" parent="."]
+
+[node name="Spot0" type="Marker3D" parent="KeySpots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3.5, 0, -0.5)
+
+[node name="Spot1" type="Marker3D" parent="KeySpots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, 1.5)
+
+[node name="Spot2" type="Marker3D" parent="KeySpots"]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.5, 0, -2.5)
+
+[node name="PropSpots" type="Node3D" parent="."]
