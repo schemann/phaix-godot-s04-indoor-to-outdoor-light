@@ -22,9 +22,19 @@ that step. The project's main scene is the final step.
 
 ## Controls
 
-WASD or arrow keys or the left stick to walk, mouse or right stick to look, Space to jump,
-Esc gives the mouse back, a click captures it again. Further keys per tutorial are shown
-in the video and in the HUD.
+- W A S D or the arrow keys walk, and so does the left stick of a gamepad.
+- The mouse or the right stick looks around.
+- Space or the A button jumps.
+- Esc gives the mouse back, and a left click captures it again.
+- Hold Shift, or hold the left stick pressed in, to walk slowly.
+- V or the left shoulder button shows your body from a second camera above the door, and V again gives the view back.
+- Tab or the Back button shows and hides the map.
+- R or the Y button starts the run again on the same seed.
+- N or the right shoulder button starts a run on the next seed.
+- T opens the seed box: type a seed and press Enter to start a run with it, or press Esc to close the box and change nothing. While the box is open, every other key you press goes into it.
+- C or the X button copies the seed to the clipboard.
+- F3 shows and hides the gizmos: the box of every planned room and its markers, drawn through the walls.
+- F4 lifts the camera above the rooms to watch the generator, Enter plans the next room while you watch, and F4 again gives the view back.
 
 ## Tests
 
